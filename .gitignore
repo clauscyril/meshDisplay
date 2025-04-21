@@ -1,0 +1,6 @@
+cmake-build-*/
+.idea/
+*.iml
+*.o
+*.obj
+*.exe
