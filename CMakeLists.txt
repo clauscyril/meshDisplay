@@ -3,30 +3,35 @@ project(meshDisplay)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# === Paths ===
 set(GLFW_DIR "${CMAKE_SOURCE_DIR}/libs/glfw")
-# set(GLAD_DIR "${CMAKE_SOURCE_DIR}/libs/glad")
-# set(GLM_DIR "${CMAKE_SOURCE_DIR}/libs/glm")
+set(GLAD_DIR "${CMAKE_SOURCE_DIR}/libs/glad")
 
+# === Executable ===
 add_executable(meshDisplay
         main.cpp
-        main
 )
 
+# === GLAD ===
+add_library(glad STATIC ${GLAD_DIR}/src/gl.c)
+target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
+
+# === GLFW ===
+add_subdirectory(${GLFW_DIR})
+
+# === Includes ===
 target_include_directories(meshDisplay PRIVATE
-        #${GLAD_DIR}/include
+        ${GLAD_DIR}/include
         ${GLFW_DIR}/include
-       # ${GLM_DIR}
 )
 
-add_subdirectory(libs/glfw)
-
-target_include_directories(meshDisplay PRIVATE
-        libs/glfw/include
+# === Linking ===
+target_link_libraries(meshDisplay PRIVATE
+        glad
+        glfw
 )
 
-target_link_libraries(meshDisplay PRIVATE glfw)
-
-
+# === Platform-specific OpenGL ===
 if (WIN32)
     target_link_libraries(meshDisplay PRIVATE opengl32)
 else()
